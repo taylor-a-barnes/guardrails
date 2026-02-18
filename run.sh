@@ -3,16 +3,7 @@
 IMAGE=$(cat .podman/image_name)
 PORT="${1:-0}"
 
-if ! podman image inspect "$IMAGE" >/dev/null 2>&1; then
-    echo "Image not found locally. Pulling $IMAGE..."
-    if ! podman build -t "$IMAGE" .; then
-        echo "Failed to pull image $IMAGE." >&2
-        exit 1
-    fi
-    echo ""
-    echo ""
-    echo ""
-fi
+podman build -t "$IMAGE" .
 
 # Copy the run script from the image
 CID=$(podman create $IMAGE)

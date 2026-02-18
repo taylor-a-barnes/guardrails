@@ -10,19 +10,7 @@ IF "%~1"=="" (
 REM Get the image name from the file
 set /p IMAGE=<.podman/image_name
 
-REM Check if the image is already available, and pull if needed
-podman image inspect %IMAGE% >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo Image not found locally. Pulling %IMAGE%...
-    podman pull %IMAGE%
-    IF %ERRORLEVEL% NEQ 0 (
-        echo Failed to pull image %IMAGE%.
-        exit /b 1
-    )
-    echo:
-    echo:
-    echo:
-)
+podman build -t %IMAGE% .
 
 REM Copy the run script from the image
 FOR /F %%i IN ('podman create %IMAGE%') DO SET CID=%%i

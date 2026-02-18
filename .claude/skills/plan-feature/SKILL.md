@@ -8,5 +8,5 @@ Ask the user clarifying questions regarding the planned feature.  Anticipate edg
 
 Do not start implementation. Focus only on planning and documentation.
 
-Create a requirements markdown file in the `req` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.  It should also include Gherkin scenarios to clearly indicate the requirements.  Include Gherkin scenarios for any edge cases.  Be complete and thorough.
+Create a requirements markdown file in the `rqm` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.  It should also include Gherkin scenarios to clearly indicate the requirements.  Include Gherkin scenarios for any edge cases.  Be complete and thorough.
 
