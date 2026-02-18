@@ -25,3 +25,40 @@ Among other things, this means that you must:
 - Never expose your private ssh keys or other personal information in your LLM container.
 - Never give an LLM write access to your remote repository, and do not include GitHub credentials in your LLM container.
 - Never push LLM-generated code until you are convinced that it hasn't introduced any exploits into your repository, and only push from outside of the container.
+
+### 2. Switch to a development workflow that is customized for use with agentic AI.
+
+Development with assistance from agentic AI represents a major paradigm shift that necessitates fundamental changes in processes and attitudes.
+In particular, you will need to adopt a workflow that utilizes your AI agents in an intelligent way.
+When first getting started, many users naturally fall into a "vibe-coding" workflow that looks like this:
+1. Ask the AI to write some code.
+2. Try running the code, and notice that something isn't quite working correctly.
+3. Ask the AI to fix the issue.
+4. Repeat steps 1-3.
+
+There are many problems with this approach.
+When you use a simple, one sentence prompt to ask an LLM to implement a complex and nuanced feature, it is almost guaranteed that you won't get what you want.
+The LLM will naturally tend to write the simplest possible code that technically does what you asked for, while assuming happy paths (that is, situations in which everything else is working correctly) and ignoring possible edge cases.
+For example, if you say "Write me a parser for XYZ molecular input files", the response from the LLM will likely make many assumptions about the formatting and contents of the XYZ files in question.
+In a proper, maintainable implementation that is suitable for distribution, you would need to consider many nuances, including the following:
+- What if the file doesn't exist?
+- What if the file has unexpected blank lines?
+- What if a line is missing expected columns?
+- What if a line has extra columns that were not expected?
+- What if columns in a line are tab-separated instead of space-separated?
+- What if the number of atoms listed in the header does not match the number of atomic coordinates listed in the rest of the file?
+- What if some of the atom types don't correspond to real elements?
+- What if the file is a trajectory file that contains many frames?
+- What should be done with the comment line in the header?
+
+If you're taking the cavalier vibe-coding approach, you aren't even considering these nuances, let alone expressing them to the LLM.
+It doesn't matter how good your LLM model is, or how good they become in the future: if you don't express what you want in clear and complete terms, you aren't going to get what you want.
+Most of the real work of programming is consumed by dealing with all of the obnoxious edge cases that an untrained mind wouldn't even notice.
+
+There are many workflows that can improve the utilization of AI agents.
+As a baseline for getting started, we recommend the following workflow:
+1. Create a requirements file for a feature.
+2. Generate code to fulfill the requirements file.
+3. If something about the new code is incorrect or insufficient, modify the requirements file to increase clarity or completeness.
+4. Repeat 2-3 until the feature is satisfactory.
+
