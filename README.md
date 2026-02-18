@@ -1,5 +1,83 @@
 # Guardrails
 
+## Getting Started
+
+### Prerequsites
+
+Install Podman, following the official podman installation [instructions](https://podman.io/docs/installation)
+
+### Creating a new repository
+
+This repository is flagged as a GitHub template.
+You can start a new repository simply by using the standard GitHub interface and utilizing this repository as the starting template.
+
+### Developing with Guardrails
+
+All development **must** take place within a Podman container.
+The template includes a hook that prevents Claude from answering any prompts unless you are running in a containerized environment.
+To launch a development environment, you can run `bash run.sh` on Linux/Mac, or `bash run.bat` on Windows.
+When prompted, select whether you want to work in Neovim or VS Code.
+Note: to force-exit Neovim, type `:qall!`.
+
+It is a good idea to start by manually creating some of the basic file structure for your project, depending on what language you are using.
+For example, if using Rust (recommended), you can type `cargo init` to initialize a new Rust project in the top-level repository directory
+
+Before you begin generating code through the LLM, you **must** generate one or more requirements documents.
+These are stored in markdown files in an `rqm` directory.
+You should have a separate requirements document for each feature.
+
+Included in this template is a skill to help you generate requirements documents, which is automatically invoked when appropriate.
+For example, you can say:
+
+```
+I want to add a parser to my code that parses XYZ molecular structure files. Help me plan this feature, and place the requirements document in rqm/parser.md.
+```
+
+You can also invoke the skill explicitly:
+
+```
+\plan-feature I want to add a parser to my code that parses XYZ molecular structure files. Help me plan this feature, and place the requirements document in rqm/parser.md.
+```
+
+Claude will then ask you numerous questions to clarify your detailed requirements, and will write them to a corresponding markdown file in the `rqm` directory.
+Examine this file carefully, including the Gherkin scenarious - these will later be used to generate unit tests for your code.
+Correct any issues with the file either manually or by asking Claude to make adjustments to the file.
+
+You may now ask Claude to implement the feature, which will automatically invoke the `\implement` skill:
+
+```
+Implement the feature in rqm/requirements.md
+```
+
+Examine and test the code Claude generates carefully.
+If there are any problems, **modify the requirements file before changing the code**.
+For example, you might prompt:
+
+```
+I want my parser to be able to support trajectory files that contain many snapshots. Help me modify the requirements file in rqm/parser.md accordingly. These trajectory files may be too big to load into memory all at once, so suggest options for how to handle this problem.
+```
+
+After making any changes to a requirements file, ask Claude to update the code:
+
+```
+I have made changes to rqm/parser.md to support trajectory files.  Update the implementation of the parser to conform to the latest version of the requirements file.
+```
+
+Repeat the above process for implementing additional features.
+It is fine for features to reference other features, and you may use subdirectories in `rqm` to better organize your requirements files.
+As you develop, the documents in `rqm` should form a complete and coherent description of all the intended functionality of your code.
+If you were to delete everything in `src`, it should be possible to reliably reproduce the functionality of your code by prompting the LLM to produce these features.
+You should treat these requirements documents as your true work product - they are the most fundamental expression of the proper functioning of the project, not your source code or your tests.
+In this approach, it may be helpful to view the development process as natural-language programming with an LLM translator, rather than LLM-generation of code.
+
+
+### Quizes
+
+It is important that you understand the functionality of your code.
+To help with this, the template includes a `\quiz` skill.
+If you prompt the LLM with this skill, it will ask you a question about the implementation details of your code.
+Using this skill periodically is a great way to ensure that you aren't creating code you don't understand.
+
 
 ## Key Rules of AI-Assisted Programming
 
