@@ -6,6 +6,8 @@
 
 Install Podman, following the official podman installation [instructions](https://podman.io/docs/installation)
 
+You'll also need a Claude subscription.
+
 ### Creating a new repository
 
 This repository is flagged as a GitHub template.
