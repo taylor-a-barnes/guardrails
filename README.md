@@ -62,3 +62,22 @@ As a baseline for getting started, we recommend the following workflow:
 3. If something about the new code is incorrect or insufficient, modify the requirements file to increase clarity or completeness.
 4. Repeat 2-3 until the feature is satisfactory.
 
+### 3. Your project's requirements files are the only source of truth.
+
+This is another big paradigm shift.
+Never write code that isn't directly necessitated by a requirements file.
+First change the requirements file, then write the code (either manually or with LLM assistance).
+The requirements files must form a complete description of the project that is sufficient to reproduce the behavior of the code from scratch, including full handling of edge cases and unhappy paths.
+If the source code doesn't agree with the requirements, the code is wrong.
+In practice, this means that as a single-contributor developer, you must follow the sorts of formal design processes normally associated with management of a human development team.
+The primary difference is that an LLM is doing the grunt work.
+
+### 4. Take full advantage of modern compilers, linters, etc.
+
+One of the primary disadvantages of working with lower-level languages is that the up-front cost of writing an initial solution is higher.
+With an LLM doing much of the work, this disadvantage is substantially mitigated; meanwhile, the benefits of having compile-time validation of the LLM agent's work is massive.
+When working with a compiled code, LLM agents can automatically attempt to compile the code, and then iteratively make any necessary corrections until all compiler errors and warnings are resolved.
+Many of these same errors would not be caught until runtime when using an interpreted language such as Python or Ruby, and runtime errors are much trickier for both humans and LLMs to notice and debug.
+
+Of particular note, we suggest that Rust is a very strong choice when doing LLM-assisted work, and should be seriously considered when starting new projects.
+
