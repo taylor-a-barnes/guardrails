@@ -1,53 +1,40 @@
 ---
 name: plan-feature
 description: Helps the user plan a feature. Use when the user asks for help designing or planning a feature, or when the user asks you to write a feature that is not already planned out in a requirements file.
-allowed-tools: Read, Grep, Glob, AskUserQuestion
+allowed-tools: Read, Grep, Glob, AskUserQuestion, Write
 ---
 
-Do not start implementation. Focus only on planning and documentation.
+Do not start implementation. Focus only on planning and documentation. Do not write to anything except requirements file(s).
+
+## Examine the Codebase
+
+Read CLAUDE.md, as well as any architecture or design documents referenced by CLAUDE.md.
+
+Check if there is already a requirements file corresponding to the feature in question.  If the user's prompt already appears to be satisfied by an existing requirements file, report this and stop execution of this skill.
+
+If the user's prompt is at least partially different from the existing requirements file, continue executing the skill, but focus on clarifying any required modifications to the existing file. Write any modifications to the existing file.
+
+Check if other existing requirements files describe features that are relevant to the user's prompt.
+
+Scan the relevant source directories to understand existing patterns and determine the project's existing language(s). Use the detected language(s) while executing this skill.
+
+## Example Requirements Files
+
+A complete example requirements file is available at `.claude/skills/plan-feature/bse.md`. Read this file.
+
+## Feature Scope
+
+Features should be as small and self-contained as reasonably possible. Consider whether the user's feature idea can be cleanly subdivided into smaller components. If so, use the AskUserQuestion tool to ask the user if it is acceptable to subdivide the feature into multiple smaller requirements files corresponding to each of these natural subdivisions.
 
 ## Ask Clarifying Questions
 
-Understand that this is one of the most important steps of this skill.
-
-Ask the user clarifying questions regarding the planned feature. Anticipate edge cases, and ask the user how they should be handled. Present these questions in the form of a menu with numbered choices.
-
-For example, if the user provides the following prompt:
-
-```
-Help me plan a feature that parses a basis set file in QSchema format, so that this basis set is subsequently available for use in other parts of my electronic structure code.  Note that basis sets can be acquired from the BSE through the feature described in rqm/basis/bse.md.
-```
-
-You might respond with the following menu:
-
-```
-──────────────────────────────────────────────────────────────────────────────
-←  ☐ Numeric type  ☐ Multi-element  ☐ SP shells  ☐ ECP data  ✔ Submit  →
-
-What should the parsed basis set be represented as? The QCSchema format stores shells with exponents and coefficients as strings — should those be converted to f64 during parsing, or kept as strings for lossless round-tripping?
-
-❯ 1. f64 (Recommended) ✔
-     Convert exponents and coefficients to f64 on parse. Convenient for computation; fails fast on malformed data.
-  2. String
-     Keep as strings. Preserves exact representation; downstream code is responsible for conversion.
-  3. Type something.
-──────────────────────────────────────────────────────────────────────────────
-  4. Chat about this
-
-Enter to select · Tab/Arrow keys to navigate · Esc to cancel
-```
-
-Continue requesting clarification from the user until the feature's details are unambiguous.
+Use the AskUserQuestion tool to ask the user clarifying questions regarding the planned feature. Anticipate edge cases, and ask the user how they should be handled. Batch related questions into a single call. Continue requesting clarification from the user until every identified edge case has an assigned handling strategy and the API surface is fully specified.
 
 ## Markdown File Location
 
 Create a requirements markdown file in the `rqm` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.
 
-## Feature Scope
-
-Features should be as small and self-contained as reasonably possible. Consider whether the user's feature idea can be cleanly subdivided into smaller components. If so, produce multiple smaller requirements files corresponding to each of these natural subdivisions.
-
-You may organize these requirements files into one or more subdirectories of `rqm`.
+Features that have been subdivided into smaller components may be organized into appropriate subdirectories of `rqm`.
 
 ## Feature API Section
 
@@ -126,10 +113,7 @@ Feature: Fetch basis set from Basis Set Exchange
     And no file is written to disk
 ```
 
-## Examples
+## Other Sections
 
-A complete example requirements file is available at `.claude/skills/plan-feature/bse.md`.
-
-
-
+Add any other sections that are useful for specifying the feature requirements, or for handling the implementation. These sections can optionally include Data Model, Performance Constraints, Security Considerations, Migration Notes, External API Details, etc.
 
