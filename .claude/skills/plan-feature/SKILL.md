@@ -10,3 +10,74 @@ Do not start implementation. Focus only on planning and documentation.
 
 Create a requirements markdown file in the `rqm` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.  It should also include Gherkin scenarios to clearly indicate the requirements.  Include Gherkin scenarios for any edge cases.  Be complete and thorough.
 
+If a feature will create any functions, classes, or types that are expected to be accessible to other portions of the code, the interface to these functions must be clearly indicated, along with the expected behavior.
+
+A complete example requirements file is available at `.claude/skills/plan-feature/bse.md`.
+
+For example, a feature that implements a function in Rust might include:
+
+```
+## Feature API
+
+### Functions
+
+- `fetch_basis(element: &str, basis_name: &str) -> Result<PathBuf, BseError>`
+  - Validates the element symbol against the known periodic table (elements 1–118).
+  - Normalizes `basis_name` to lowercase and `element` to title case before use in file paths and
+    API requests.
+  - Checks whether a valid cached file already exists at `data/basis/{basis_name}/{element}.json`.
+  - If the cache is missing or corrupt, downloads the basis set data for the given element from the
+    BSE REST API in QCSchema (JSON) format, creating any missing directories, and overwrites the
+    cache file with the fresh response.
+  - Returns the `PathBuf` to the cached file on success.
+
+### Types
+
+- `BseError` — error type returned by `fetch_basis`. Must include at minimum:
+  - `InvalidElement(String)` — the element symbol does not correspond to a known element (Z = 1–118).
+  - `InvalidBasisSetName(String)` — the basis set name is empty or otherwise malformed before any
+    API request is made.
+  - `ElementNotInBasisSet { element: String, basis_name: String }` — the basis set exists but does
+    not include data for this element.
+  - `UnknownBasisSet(String)` — the BSE does not recognise the basis set name (HTTP 404).
+  - `NetworkError(String)` — a network or HTTP-level failure (unreachable host, timeout, or
+    non-200/404 status code).
+  - `IoError(String)` — a filesystem operation failed (directory creation, file write, or file read).
+  - `InvalidResponse(String)` — the BSE returned a response that could not be parsed as valid JSON.
+```
+
+And the Gherkin scenarios for that same feature would look like:
+
+```gherkin
+Feature: Fetch basis set from Basis Set Exchange
+
+  Background:
+    Given the BSE base URL is "https://www.basissetexchange.org"
+
+  Scenario: Download a basis set that is not cached
+    Given the file "data/basis/sto-3g/H.json" does not exist
+    And the BSE API will return a valid QCSchema JSON response for element "H" and basis "sto-3g"
+    When fetch_basis("H", "sto-3g") is called
+    Then the file "data/basis/sto-3g/H.json" is created
+    And the file contains the JSON response returned by the BSE API
+    And fetch_basis returns Ok with the path "data/basis/sto-3g/H.json"
+
+  Scenario: Return cached file when a valid cache exists
+    Given a non-empty, valid JSON file exists at "data/basis/sto-3g/H.json"
+    When fetch_basis("H", "sto-3g") is called
+    Then no HTTP request is made to the BSE API
+    And fetch_basis returns Ok with the path "data/basis/sto-3g/H.json"
+
+  Scenario: Reject an unrecognised element symbol
+    When fetch_basis("Xx", "sto-3g") is called
+    Then no HTTP request is made to the BSE API
+    And fetch_basis returns Err(BseError::InvalidElement("Xx"))
+
+  Scenario: Basis set name is not known to the BSE
+    Given the file "data/basis/unknown-basis/H.json" does not exist
+    And the BSE API will return HTTP 404 for element "H" and basis "unknown-basis"
+    When fetch_basis("H", "unknown-basis") is called
+    Then fetch_basis returns Err(BseError::UnknownBasisSet("unknown-basis"))
+    And no file is written to disk
+```
+

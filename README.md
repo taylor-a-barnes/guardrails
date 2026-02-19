@@ -15,14 +15,24 @@ You can start a new repository simply by using the standard GitHub interface and
 
 ### Developing with Guardrails
 
+#### 1. Launch a development container
+
 All development **must** take place within a Podman container.
 The template includes a hook that prevents Claude from answering any prompts unless you are running in a containerized environment.
 To launch a development environment, you can run `bash run.sh` on Linux/Mac, or `bash run.bat` on Windows.
 When prompted, select whether you want to work in Neovim or VS Code.
-Note: to force-exit Neovim, type `:qall!`.
+
+In VS Code, you can use Claude by opening a terminal and executing the `claude` command.
+In Neovim, a terminal is already open in the lower panel.
+You can navigate between panels with \<alt+h/j/k/l\>.
+To force-exit Neovim, type `:qall!`.
+
+#### 2. Create an initial file structure
 
 It is a good idea to start by manually creating some of the basic file structure for your project, depending on what language you are using.
 For example, if using Rust (recommended), you can type `cargo init` to initialize a new Rust project in the top-level repository directory
+
+#### 3. Generate a requirements document
 
 Before you begin generating code through the LLM, you **must** generate one or more requirements documents.
 These are stored in markdown files in an `rqm` directory.
@@ -45,11 +55,38 @@ Claude will then ask you numerous questions to clarify your detailed requirement
 Examine this file carefully, including the Gherkin scenarious - these will later be used to generate unit tests for your code.
 Correct any issues with the file either manually or by asking Claude to make adjustments to the file.
 
+For somewhat more complex features, it may prove useful to manually fill out a small portion of a requirements document, and then ask Claude to refine it.
+For example, you might write a file in `rqm/basis/bse.md` with the following contents:
+
+```
+# Feature: Pull Missing Basis Set from Basis Set Exchange
+
+There will be points when this code will need access to a Gaussian basis set for the purpose of electronic structure calculations.
+Basis set files should be stored in a directory called `data/basis`.
+If a required basis set is not available in this directory, it should be downloaded from the Basis Set Exchange (BSE), using the BSE API.
+The BSE website is https://www.basissetexchange.org/.
+If the `data/basis` directory does not exist, it should be created.
+
+This feature implements a function that is given an atom type and the name of a basis set, and downloads the required file from the BSE if it is not already present.
+```
+
+Then, you can prompt:
+
+```
+Help me flesh out the requirements file in rqm/basis/bse.md
+```
+
+
+
+#### 4. Implement the feature
+
 You may now ask Claude to implement the feature, which will automatically invoke the `\implement` skill:
 
 ```
 Implement the feature in rqm/requirements.md
 ```
+
+#### 5. Iteratively refine the requirements and code
 
 Examine and test the code Claude generates carefully.
 If there are any problems, **modify the requirements file before changing the code**.
@@ -66,6 +103,10 @@ I have made changes to rqm/parser.md to support trajectory files.  Update the im
 ```
 
 Repeat the above process for implementing additional features.
+
+
+#### General points
+
 It is fine for features to reference other features, and you may use subdirectories in `rqm` to better organize your requirements files.
 As you develop, the documents in `rqm` should form a complete and coherent description of all the intended functionality of your code.
 If you were to delete everything in `src`, it should be possible to reliably reproduce the functionality of your code by prompting the LLM to produce these features.
