@@ -200,5 +200,6 @@ With an LLM doing much of the work, this disadvantage is substantially mitigated
 When working with a compiled code, LLM agents can automatically attempt to compile the code, and then iteratively make any necessary corrections until all compiler errors and warnings are resolved.
 Many of these same errors would not be caught until runtime when using an interpreted language such as Python or Ruby, and runtime errors are much trickier for both humans and LLMs to notice and debug.
 
-Of particular note, we suggest that Rust is a very strong choice when doing LLM-assisted work, and should be seriously considered when starting new projects.
-
+Having said this, many low-level compiled languages, including C and C++, introduce another major headache in the form of memory bugs.
+These sorts of bugs are easy for both humans and LLMs to accidentally introduce, while being notoriously difficult to identify or debug.
+This makes memory-safe languages, such as Rust, especially appealing for the purpose of LLM-assisted work.
