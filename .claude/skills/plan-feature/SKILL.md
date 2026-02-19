@@ -8,11 +8,19 @@ Ask the user clarifying questions regarding the planned feature.  Anticipate edg
 
 Do not start implementation. Focus only on planning and documentation.
 
-Create a requirements markdown file in the `rqm` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.  It should also include Gherkin scenarios to clearly indicate the requirements.  Include Gherkin scenarios for any edge cases.  Be complete and thorough.
+## Markdown File Location
+
+Create a requirements markdown file in the `rqm` directory.  The file name should be brief and descriptive of the feature.  The file should begin with a clear description of the feature.
+
+## Feature Scope
+
+Features should be as small and self-contained as reasonably possible. Consider whether the user's feature idea can be cleanly subdivided into smaller components. If so, produce multiple smaller requirements files corresponding to each of these natural subdivisions.
+
+You may organize these requirements files into one or more subdirectories of `rqm`.
+
+## Feature API Section
 
 If a feature will create any functions, classes, or types that are expected to be accessible to other portions of the code, the interface to these functions must be clearly indicated, along with the expected behavior.
-
-A complete example requirements file is available at `.claude/skills/plan-feature/bse.md`.
 
 For example, a feature that implements a function in Rust might include:
 
@@ -46,7 +54,13 @@ For example, a feature that implements a function in Rust might include:
   - `InvalidResponse(String)` — the BSE returned a response that could not be parsed as valid JSON.
 ```
 
-And the Gherkin scenarios for that same feature would look like:
+## Gherkin Scenarios Section
+
+The requirements document must include a section for Gherkin Scenarios. These scenarios should clarify the requirements as well as the proper handling for any edge cases. Be complete and thorough.
+
+When the feature is later implemented, these scenarios will be used to construct unit tests, and they should therefore be designed to be suitable for this purpose. It should ideally be straightforward and reasonable to construct a single unit test corresponding to each scenario.
+
+The following provides a subset of the Gherkin scenarios that might be included in the Gherkin Scenarios section:
 
 ```gherkin
 Feature: Fetch basis set from Basis Set Exchange
@@ -80,4 +94,11 @@ Feature: Fetch basis set from Basis Set Exchange
     Then fetch_basis returns Err(BseError::UnknownBasisSet("unknown-basis"))
     And no file is written to disk
 ```
+
+## Examples
+
+A complete example requirements file is available at `.claude/skills/plan-feature/bse.md`.
+
+
+
 
