@@ -4,9 +4,40 @@ description: Helps the user plan a feature. Use when the user asks for help desi
 allowed-tools: Read, Grep, Glob, AskUserQuestion
 ---
 
-Ask the user clarifying questions regarding the planned feature.  Anticipate edge cases, and ask the user how they should be handled.
-
 Do not start implementation. Focus only on planning and documentation.
+
+## Ask Clarifying Questions
+
+Understand that this is one of the most important steps of this skill.
+
+Ask the user clarifying questions regarding the planned feature. Anticipate edge cases, and ask the user how they should be handled. Present these questions in the form of a menu with numbered choices.
+
+For example, if the user provides the following prompt:
+
+```
+Help me plan a feature that parses a basis set file in QSchema format, so that this basis set is subsequently available for use in other parts of my electronic structure code.  Note that basis sets can be acquired from the BSE through the feature described in rqm/basis/bse.md.
+```
+
+You might respond with the following menu:
+
+```
+──────────────────────────────────────────────────────────────────────────────
+←  ☐ Numeric type  ☐ Multi-element  ☐ SP shells  ☐ ECP data  ✔ Submit  →
+
+What should the parsed basis set be represented as? The QCSchema format stores shells with exponents and coefficients as strings — should those be converted to f64 during parsing, or kept as strings for lossless round-tripping?
+
+❯ 1. f64 (Recommended) ✔
+     Convert exponents and coefficients to f64 on parse. Convenient for computation; fails fast on malformed data.
+  2. String
+     Keep as strings. Preserves exact representation; downstream code is responsible for conversion.
+  3. Type something.
+──────────────────────────────────────────────────────────────────────────────
+  4. Chat about this
+
+Enter to select · Tab/Arrow keys to navigate · Esc to cancel
+```
+
+Continue requesting clarification from the user until the feature's details are unambiguous.
 
 ## Markdown File Location
 
