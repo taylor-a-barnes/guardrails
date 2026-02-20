@@ -1,6 +1,6 @@
 ---
 name: plan-feature
-description: Helps the user plan a feature. Use when the user asks for help designing or planning a feature, or when the user asks you to write a feature that is not already planned out in a requirements file.
+description: Helps the user plan a feature. Use when the user asks for help designing or planning a feature, or when the user asks for assistance writing, modifying, fleshing out, completing, expanding, or detailing a requirements file.
 allowed-tools: Read, Grep, Glob, AskUserQuestion, Write
 ---
 

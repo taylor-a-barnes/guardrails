@@ -76,6 +76,8 @@ Then, you can prompt:
 Help me flesh out the requirements file in rqm/basis/bse.md
 ```
 
+And then claude will automatically use the `/plan-feature` skill.
+
 
 
 #### 4. Implement the feature
