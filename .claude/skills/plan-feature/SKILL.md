@@ -1,7 +1,7 @@
 ---
 name: plan-feature
 description: Helps the user plan a feature. Use when the user asks for help designing or planning a feature, or when the user asks for assistance writing, modifying, fleshing out, completing, expanding, or detailing a requirements file.
-allowed-tools: Read, Grep, Glob, AskUserQuestion, Write
+allowed-tools: Read, Grep, Glob, Bash, AskUserQuestion, Write
 ---
 
 Do not start implementation. Focus only on planning and documentation. Do not write to anything except requirements file(s).
@@ -116,4 +116,30 @@ Feature: Fetch basis set from Basis Set Exchange
 ## Other Sections
 
 Add any other sections that are useful for specifying the feature requirements, or for handling the implementation. These sections can optionally include Data Model, Performance Constraints, Security Considerations, Migration Notes, External API Details, etc.
+
+## Traceability IDs
+
+Every requirements file uses stable opaque IDs (e.g. `rq-3a7f1c2e`) to tag headings, API items,
+and Gherkin scenarios. These IDs are managed by `.claude/skills/plan-feature/rqm.sh`.
+
+**After writing or modifying any requirements file**, run these two commands in order:
+
+```
+.claude/skills/plan-feature/rqm.sh stamp <path-to-file>
+.claude/skills/plan-feature/rqm.sh index
+```
+
+`stamp` assigns fresh IDs to any entities that do not yet have one; it never changes existing IDs.
+`index` rebuilds `rqm/registry.json` so that the new or updated entries are recorded.
+
+**When examining existing requirements files or source files**, if you encounter an `rq-XXXXXXXX`
+ID and need more context about what it refers to, use:
+
+```
+.claude/skills/plan-feature/rqm.sh show rq-XXXXXXXX
+```
+
+This prints the type, file, title, declaration line, and source references for that ID. Use this
+whenever you find an `rq-` token in a source file comment and need to understand the requirement it
+implements before proposing changes.
 
