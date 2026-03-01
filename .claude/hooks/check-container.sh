@@ -23,8 +23,10 @@
       return 0
     fi
 
-    # Check cgroup v2 (used by newer Podman/Docker)
-    if grep -qE 'docker|libpod|lxc|kubepods' /proc/self/mountinfo 2>/dev/null; then
+    # Check if the root filesystem is an overlay mount (indicates running inside a container).
+    # Avoids false positives from host Docker mounts appearing in mountinfo on WSL2.
+    if awk '$5 == "/" { found=1; exit } END { exit !found }' /proc/self/mountinfo 2>/dev/null &&
+       awk '$5 == "/" && $9 == "overlay" { found=1; exit } END { exit !found }' /proc/self/mountinfo 2>/dev/null; then
       return 0
     fi
 
