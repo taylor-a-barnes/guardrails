@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+{% if language == "rust" %}
+      "Bash(cargo check:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo run:*)",
+      "Bash(cargo test:*)",
+{% endif %}
+{% if language == "python" %}
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pytest:*)",
+      "Bash(pip install:*)",
+      "Bash(pylint:*)",
+      "Bash(bandit:*)",
+{% endif %}
+      "Skill(plan-feature)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-container.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

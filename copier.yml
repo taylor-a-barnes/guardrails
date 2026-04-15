@@ -1,0 +1,43 @@
+_min_copier_version: "9"
+_subdirectory: template
+
+# ---------------------------------------------------------------------------
+# Project identity
+# ---------------------------------------------------------------------------
+
+project_name:
+  type: str
+  help: Human-readable name of your project (e.g. "My Project")
+
+project_slug:
+  type: str
+  help: Short identifier used in image names, directory names, etc.
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+
+project_description:
+  type: str
+  help: One-sentence description of what your project does
+
+# ---------------------------------------------------------------------------
+# Language
+# ---------------------------------------------------------------------------
+
+language:
+  type: str
+  choices:
+    - rust
+    - python
+  default: rust
+  help: Primary programming language for this project
+
+# ---------------------------------------------------------------------------
+# Author
+# ---------------------------------------------------------------------------
+
+author_name:
+  type: str
+  help: Your full name
+
+author_email:
+  type: str
+  help: Your email address

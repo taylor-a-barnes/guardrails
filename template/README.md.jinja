@@ -1,0 +1,113 @@
+# {{ project_name }}
+
+{{ project_description }}
+
+## Getting Started
+
+### Prerequisites
+
+Install Podman by following the official [installation instructions](https://podman.io/docs/installation).
+
+You will also need a Claude subscription.
+
+### Launching the development environment
+
+All development **must** take place within a Podman container.
+The template includes a hook that prevents Claude from answering any prompts unless you are running in a containerized environment.
+
+Run `bash run.sh` on Linux/Mac, or `run.bat` on Windows.
+When prompted, select whether you want to work in Neovim or VS Code.
+
+- **VS Code**: open a terminal and run `claude`.
+- **Neovim**: a terminal is already open in the lower panel.
+  Navigate between panels with `<alt+h/j/k/l>`.
+  Force-exit Neovim with `:qall!`.
+
+### Initializing the project
+
+{% if language == "rust" %}
+Initialize a Rust project in the repository root:
+
+```
+cargo init
+```
+{% endif %}
+{% if language == "python" %}
+Create a virtual environment and install your dependencies:
+
+```
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+{% endif %}
+
+## Development Workflow
+
+### 1. Write a requirements document
+
+Before generating code, create a requirements document in the `rqm/` directory.
+Use the built-in skill by prompting:
+
+```
+Help me plan <feature description>. Place the requirements document in rqm/<feature>.md.
+```
+
+Or invoke the skill explicitly:
+
+```
+/plan-feature Help me plan <feature description>. Place the requirements document in rqm/<feature>.md.
+```
+
+Claude will ask clarifying questions and write a complete requirements file including Gherkin scenarios.
+
+### 2. Implement the feature
+
+```
+Implement the feature in rqm/<feature>.md
+```
+
+### 3. Iterate
+
+If the output is incorrect or incomplete, **modify the requirements file first**, then ask Claude to update the implementation:
+
+```
+I have updated rqm/<feature>.md. Update the implementation to match.
+```
+
+### 4. Verify understanding with quizzes
+
+```
+/quiz
+```
+
+Claude will ask you a multiple-choice question about the implementation to help ensure you understand the code.
+
+## Key Rules
+
+### Only ever use agentic AI inside a Podman container
+
+LLMs are susceptible to prompt injection and data poisoning.
+This repository includes a hook that blocks Claude unless it is running inside a container.
+Even inside a container, you should:
+
+- Never share private SSH keys or other sensitive credentials.
+- Never give the LLM write access to remote repositories.
+- Never push LLM-generated code without reviewing it carefully first.
+
+### Treat requirements documents as the source of truth
+
+The `rqm/` directory should contain a complete, version-controlled description of every intended behavior of the project.
+If you delete everything in `src/`, it should be possible to reproduce your code from the requirements files alone.
+**Never write code that isn't directly necessitated by a requirements file.**
+
+### Use memory-safe languages and modern tooling
+
+{% if language == "rust" %}
+Rust's compiler catches a large class of bugs at compile time.
+Always resolve all compiler errors and warnings before considering a feature complete.
+{% endif %}
+{% if language == "python" %}
+Use type annotations and run a linter (e.g. `pylint` or `ruff`) to catch issues early.
+For security scanning, run `bandit` on your source.
+{% endif %}
