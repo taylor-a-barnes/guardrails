@@ -5,6 +5,7 @@
 ### Prerequsites
 
 Install Podman, following the official podman installation [instructions](https://podman.io/docs/installation).
+
 Install Copier.
 
 You'll also need a Claude subscription.
@@ -15,7 +16,7 @@ This repository is a Copier template.
 To create a new project, you can do:
 
 ```bash
-copier copy gh:<org>/guardrails my-new-project
+copier copy gh:taylor-a-barnes/guardrails my-new-project
 ```
 
 To pull the latest Guardrails updates into your project, you can do:
