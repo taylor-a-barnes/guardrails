@@ -1,5 +1,7 @@
 # Guardrails
 
+**Important:** This repository and the ideas expressed within represent an early effort to identify best practices for AI-assisted development, and do not yet reflect official MolSSI recommendations.
+
 ## Getting Started
 
 ### Prerequsites
@@ -16,7 +18,7 @@ This repository is a Copier template.
 To create a new project, you can do:
 
 ```bash
-copier copy gh:taylor-a-barnes/guardrails my-new-project
+copier copy gh:MolSSI/guardrails my-new-project
 ```
 
 To pull the latest Guardrails updates into your project, you can do:
